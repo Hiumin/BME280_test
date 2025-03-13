@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "test",
-    "project_version":    "1f75c2e-dirty",
+    "project_version":    "c51ad63-dirty",
     "project_path":       "G:/DA1",
     "idf_path":           "C:/Espressif/frameworks/esp-idf-master",
     "build_dir":          "G:/DA1/build",
@@ -1285,7 +1285,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "G:/DA1/build/esp-idf/main/libmain.a",
-            "sources": [ "G:/DA1/main/bme280.c", "G:/DA1/main/main.c", "G:/DA1/main/pms7003.c" ],
+            "sources": [ "G:/DA1/main/main.c", "G:/DA1/main/pms7003.c", "G:/DA1/main/bme280.c" ],
             "include_dirs": [ "." ]
         },
         "mbedtls": {

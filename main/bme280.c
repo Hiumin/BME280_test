@@ -2,21 +2,15 @@
 #include "esp_log.h"
 #include "driver/i2c.h"
 #include "bme280.h"
+
 #define I2C_MASTER_SCL_IO          22        /*!< GPIO cho chân SCL */
 #define I2C_MASTER_SDA_IO          21        /*!< GPIO cho chân SDA */
 #define I2C_MASTER_NUM             I2C_NUM_0 /*!< I2C port */
 #define I2C_MASTER_FREQ_HZ         100000    /*!< Tốc độ I2C (100kHz) */
-#define I2C_MASTER_TX_BUF_DISABLE  0         /*!< Không sử dụng buffer TX */
-#define I2C_MASTER_RX_BUF_DISABLE  0         /*!< Không sử dụng buffer RX */
-#define I2C_MASTER_TIMEOUT_MS      1000      /*!< Timeout cho I2C */
 
 #define BME280_I2C_ADDRESS         0x76      /*!< Địa chỉ I2C của BME280 */
 
-static const char *TAG = "BME280_TEST";
-
-/*
-Thiết lập giao tiếp I2C
- */
+//Thiết lập giao tiếp I2C
 esp_err_t i2c_master_init(void) {
     int i2c_master_port = I2C_MASTER_NUM;
     
@@ -31,72 +25,38 @@ esp_err_t i2c_master_init(void) {
 
     esp_err_t err = i2c_param_config(i2c_master_port, &conf);
     if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Cấu hình I2C thất bại");
+        ESP_LOGE("I2C", "Ket noi I2C that bai");
         return err;
     }
 
-    return i2c_driver_install(i2c_master_port, conf.mode, I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
+    return i2c_driver_install(i2c_master_port, conf.mode, 0, 0, 0);
 }
 
-/*
-Kiểm tra kết nối BME280
- */
-esp_err_t bme280_check_connection() {
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, (BME280_I2C_ADDRESS << 1) | I2C_MASTER_WRITE, true);
-    i2c_master_stop(cmd);
-
-    esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS);
-    i2c_cmd_link_delete(cmd);
-
-    if (ret == ESP_OK) {
-        ESP_LOGI(TAG, "BME280 da ket noi thanh cong!");
-    } else {
-        ESP_LOGE(TAG, "Khong the ket noi den BME280");
+//Kiểm tra kết nối BME280
+esp_err_t bme280_check_connection(void) {
+    bme280 bme280_device;
+    bmp280_params_t bme280_params;
+    
+    // Khởi tạo BME280
+    esp_err_t ret = bme280_init(&bme280_device, &bme280_params, BME280_I2C_ADDRESS, I2C_MASTER_NUM, I2C_MASTER_SDA_IO, I2C_MASTER_SCL_IO);
+    if (ret != ESP_OK) {
+        ESP_LOGE("BME280", "Không thể kết nối với BME280!");
+        return ret;
     }
-
-    return ret;
+    ESP_LOGI("BME280", "Kết nối với BME280 thành công!");
+    return ESP_OK;
 }
 
-/*Hàm đọc thanh ghi từ BME280
- */
-esp_err_t bme280_read_register(uint8_t reg_addr, uint8_t *data, uint16_t len) {
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, (BME280_I2C_ADDRESS << 1) | I2C_MASTER_WRITE, true);
-    i2c_master_write_byte(cmd, reg_addr, true);
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, (BME280_I2C_ADDRESS << 1) | I2C_MASTER_READ, true);
-    i2c_master_read(cmd, data, len, I2C_MASTER_LAST_NACK);
-    i2c_master_stop(cmd);
-    esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_PERIOD_MS);
-    i2c_cmd_link_delete(cmd);
-    return ret;
-}
-
-/*
-Đọc dữ liệu nhiệt độ và độ ẩm từ BME280
- */
+//Đọc dữ liệu nhiệt độ và độ ẩm từ BME280
 void read_bme280_data(void) {
-    uint8_t data[8];
-    int32_t raw_temp, raw_hum;
-    float temperature, humidity;
+    bme280 bme280_device;
+    float temperature, pressure, humidity;
 
-    while (1) {
-        // Đọc dữ liệu từ thanh ghi nhiệt độ và độ ẩm
-        if (bme280_read_register(0xF7, data, 8) == ESP_OK) {
-            raw_temp = (int32_t)((((uint32_t)data[3] << 16) | ((uint32_t)data[4] << 8) | (uint32_t)data[5]) >> 4);
-            raw_hum = (int32_t)(((uint32_t)data[6] << 8) | (uint32_t)data[7]);
-
-            // Chuyển đổi dữ liệu thô sang nhiệt độ và độ ẩm thực tế
-            temperature = raw_temp / 5120.0;
-            humidity = raw_hum / 1024.0;
-
-            ESP_LOGI(TAG, "Nhiet do: %.2f °C, Đo am: %.2f%%", temperature, humidity);
-        } else {
-            ESP_LOGE(TAG, "Khong the doc du lieu tu BME280");
-        }
-        vTaskDelay(pdMS_TO_TICKS(2000)); // Chờ 2 giây
+    esp_err_t ret = bme280_readSensorData(&bme280_device, &temperature, &pressure, &humidity);
+    if (ret == ESP_OK) {
+        ESP_LOGI("BME280", "Nhiet do: %.2f °C, Ap suat: %.2f hPa, Do am: %.2f%%", 
+                 temperature, pressure / 100.0, humidity);
+    } else {
+        ESP_LOGE("BME280", "Khong the lay du lieu tu BME280");
     }
 }
