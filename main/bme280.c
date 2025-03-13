@@ -2,7 +2,6 @@
 #include "esp_log.h"
 #include "driver/i2c.h"
 #include "bme280.h"
-//test123
 #define I2C_MASTER_SCL_IO          22        /*!< GPIO cho chân SCL */
 #define I2C_MASTER_SDA_IO          21        /*!< GPIO cho chân SDA */
 #define I2C_MASTER_NUM             I2C_NUM_0 /*!< I2C port */
@@ -15,10 +14,10 @@
 
 static const char *TAG = "BME280_TEST";
 
-/**
- * @brief Thiết lập giao tiếp I2C
+/*
+Thiết lập giao tiếp I2C
  */
-static esp_err_t i2c_master_init(void) {
+esp_err_t i2c_master_init(void) {
     int i2c_master_port = I2C_MASTER_NUM;
     
     i2c_config_t conf = {
@@ -39,10 +38,10 @@ static esp_err_t i2c_master_init(void) {
     return i2c_driver_install(i2c_master_port, conf.mode, I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
 }
 
-/**
- * @brief Kiểm tra kết nối BME280
+/*
+Kiểm tra kết nối BME280
  */
-static esp_err_t bme280_check_connection() {
+esp_err_t bme280_check_connection() {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (BME280_I2C_ADDRESS << 1) | I2C_MASTER_WRITE, true);
@@ -60,10 +59,9 @@ static esp_err_t bme280_check_connection() {
     return ret;
 }
 
-/**
- * @brief Hàm đọc thanh ghi từ BME280
+/*Hàm đọc thanh ghi từ BME280
  */
-static esp_err_t bme280_read_register(uint8_t reg_addr, uint8_t *data, uint16_t len) {
+esp_err_t bme280_read_register(uint8_t reg_addr, uint8_t *data, uint16_t len) {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (BME280_I2C_ADDRESS << 1) | I2C_MASTER_WRITE, true);
@@ -77,10 +75,10 @@ static esp_err_t bme280_read_register(uint8_t reg_addr, uint8_t *data, uint16_t 
     return ret;
 }
 
-/**
- * @brief Đọc dữ liệu nhiệt độ và độ ẩm từ BME280
+/*
+Đọc dữ liệu nhiệt độ và độ ẩm từ BME280
  */
-static void read_bme280_data(void) {
+void read_bme280_data(void) {
     uint8_t data[8];
     int32_t raw_temp, raw_hum;
     float temperature, humidity;
@@ -101,25 +99,4 @@ static void read_bme280_data(void) {
         }
         vTaskDelay(pdMS_TO_TICKS(2000)); // Chờ 2 giây
     }
-}
-
-/**
- * @brief Chương trình chính
- */
-void app_main(void) {
-    ESP_LOGI(TAG, "Bắt đầu kiểm tra BME280");
-
-    // Khởi tạo I2C
-    if (i2c_master_init() == ESP_OK) {
-        ESP_LOGI(TAG, "I2C đã được khởi tạo thành công");
-    } else {
-        ESP_LOGE(TAG, "Lỗi khi khởi tạo I2C");
-        return;
-    }
-
-    // Kiểm tra kết nối với BME280
-    bme280_check_connection();
-
-    //Đọc dữ liệu từ BME280
-    read_bme280_data();
 }
