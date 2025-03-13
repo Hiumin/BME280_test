@@ -2,7 +2,7 @@
 #include "esp_log.h"
 #include "driver/i2c.h"
 #include "bme280.h"
-
+//test123
 #define I2C_MASTER_SCL_IO          22        /*!< GPIO cho chân SCL */
 #define I2C_MASTER_SDA_IO          21        /*!< GPIO cho chân SDA */
 #define I2C_MASTER_NUM             I2C_NUM_0 /*!< I2C port */
