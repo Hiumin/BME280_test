@@ -1,4 +1,4 @@
-idf_component_register(SRCS "bme280.c"
+idf_component_register(SRCS "main.c" "pms7003.c"
                     INCLUDE_DIRS "."
-                    REQUIRES BME280 i2cdev driver)
+                    REQUIRES BME280 i2cdev driver PMS7003)
 

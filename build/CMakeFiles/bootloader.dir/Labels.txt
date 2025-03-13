@@ -1,13 +1,13 @@
 # Target labels
  bootloader
 # Source files and their labels
-G:/AIRSENSE/test/build/CMakeFiles/bootloader
-G:/AIRSENSE/test/build/CMakeFiles/bootloader.rule
-G:/AIRSENSE/test/build/CMakeFiles/bootloader-complete.rule
-G:/AIRSENSE/test/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
-G:/AIRSENSE/test/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
-G:/AIRSENSE/test/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
-G:/AIRSENSE/test/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
-G:/AIRSENSE/test/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
-G:/AIRSENSE/test/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
-G:/AIRSENSE/test/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
+C:/Users/DuyTran/Documents/GitHub/BME280_test/build/CMakeFiles/bootloader
+C:/Users/DuyTran/Documents/GitHub/BME280_test/build/CMakeFiles/bootloader.rule
+C:/Users/DuyTran/Documents/GitHub/BME280_test/build/CMakeFiles/bootloader-complete.rule
+C:/Users/DuyTran/Documents/GitHub/BME280_test/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+C:/Users/DuyTran/Documents/GitHub/BME280_test/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+C:/Users/DuyTran/Documents/GitHub/BME280_test/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+C:/Users/DuyTran/Documents/GitHub/BME280_test/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+C:/Users/DuyTran/Documents/GitHub/BME280_test/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+C:/Users/DuyTran/Documents/GitHub/BME280_test/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+C:/Users/DuyTran/Documents/GitHub/BME280_test/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
