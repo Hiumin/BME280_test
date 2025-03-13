@@ -51,9 +51,9 @@ esp_err_t bme280_check_connection() {
     i2c_cmd_link_delete(cmd);
 
     if (ret == ESP_OK) {
-        ESP_LOGI(TAG, "BME280 đã kết nối thành công!");
+        ESP_LOGI(TAG, "BME280 da ket noi thanh cong!");
     } else {
-        ESP_LOGE(TAG, "Không tìm thấy BME280! Vui lòng kiểm tra dây kết nối.");
+        ESP_LOGE(TAG, "Khong the ket noi den BME280");
     }
 
     return ret;
@@ -93,9 +93,9 @@ void read_bme280_data(void) {
             temperature = raw_temp / 5120.0;
             humidity = raw_hum / 1024.0;
 
-            ESP_LOGI(TAG, "Nhiệt độ: %.2f °C, Độ ẩm: %.2f%%", temperature, humidity);
+            ESP_LOGI(TAG, "Nhiet do: %.2f °C, Đo am: %.2f%%", temperature, humidity);
         } else {
-            ESP_LOGE(TAG, "Không thể đọc dữ liệu từ BME280");
+            ESP_LOGE(TAG, "Khong the doc du lieu tu BME280");
         }
         vTaskDelay(pdMS_TO_TICKS(2000)); // Chờ 2 giây
     }
